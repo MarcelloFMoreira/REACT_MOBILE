@@ -29,11 +29,13 @@ export default function HomeScreen({ navigation, route }) {
     loadProducts();
   }, []);
 
-  useEffect(() => {
-    if (route.params?.scannedBarcode) {
-      setBarcode(String(route.params.scannedBarcode));
-    }
-  }, [route.params?.scannedBarcode]);
+    useEffect(() => {
+      if (route.params?.scannedBarcode) {
+        setBarcode(String(route.params.scannedBarcode));
+        if (route.params?.currentName) setName(route.params.currentName);
+        if (route.params?.currentPrice) setPrice(route.params.currentPrice);
+      }
+    }, [route.params?.scannedBarcode]);
 
   function clearForm() {
     setName("");
@@ -106,9 +108,12 @@ export default function HomeScreen({ navigation, route }) {
     }
   }
 
-  function handleOpenScanner() {
-    navigation.navigate("BarcodeScanner");
-  }
+    function handleOpenScanner() {
+      navigation.navigate("BarcodeScanner", {
+        currentName: name,
+        currentPrice: price,
+      });
+    }
 
   return (
 
