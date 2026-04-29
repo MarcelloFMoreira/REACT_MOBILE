@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { View, Text, TextInput, Button, Alert, FlatList } from "react-native";
 import {
   createProduct,
@@ -41,13 +42,13 @@ export default function HomeScreen({ navigation, route }) {
     setEditingProductId(null);
   }
 
-async function handleSaveProduct() {
-  const numericPrice = parseFloat(price);
+  async function handleSaveProduct() {
+    const numericPrice = parseFloat(price);
 
-if (!name.trim() || isNaN(numericPrice) || numericPrice <= 0) {
-    Alert.alert("Atenção", "Por favor, insira um nome e um preço numérico válido.");
-    return;
-  }
+    if (!name.trim() || isNaN(numericPrice) || numericPrice <= 0) {
+      Alert.alert("Atenção", "Por favor, insira um nome e um preço numérico válido.");
+      return;
+    }
 
     const productData = {
       name: name.trim(),
@@ -110,6 +111,13 @@ if (!name.trim() || isNaN(numericPrice) || numericPrice <= 0) {
   }
 
   return (
+     
+    <ScrollView
+    contentContainerStyle={{ flexGrow: 1, padding: 16 }}
+    keyboardShouldPersistTaps="handled"
+    showsVerticalScrollIndicator={false}
+  >
+ 
     <View style={{ flex: 1, padding: 20 }}>
       <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20 }}>
         Bem-vindo!
@@ -131,21 +139,9 @@ if (!name.trim() || isNaN(numericPrice) || numericPrice <= 0) {
         }}
       />
 
-<TextInput
-  placeholder="Preço"
-  value={price}
-  onChangeText={(text) => setPrice(text.replace(/[^0-9.]/g, ""))}
-  keyboardType="numeric"
-  style={{
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-  }}
-/>
-<KeyboardAvoidingView
+
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}
       >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
@@ -155,7 +151,7 @@ if (!name.trim() || isNaN(numericPrice) || numericPrice <= 0) {
           <TextInput
             placeholder="Preço"
             value={price}
-            onChangeText={setPrice}
+            onChangeText={(text) => setPrice(text.replace(/[^0-9.]/g, ""))}
             keyboardType="numeric"
             style={{
               borderWidth: 1,
@@ -232,5 +228,6 @@ if (!name.trim() || isNaN(numericPrice) || numericPrice <= 0) {
         <Button title="Sair" onPress={() => navigation.navigate("Login")} />
       </View>
     </View>
+  </ScrollView>
   );
 }
